@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-09-2024 a las 01:33:23
+-- Tiempo de generación: 24-09-2024 a las 00:26:14
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,44 +24,22 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `carritos`
+-- Estructura de tabla para la tabla `carrito`
 --
 
-CREATE TABLE `carritos` (
-  `id` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `estado` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `carritos`
---
-
-INSERT INTO `carritos` (`id`, `id_usuario`, `estado`) VALUES
-(1, 1, 'Activo'),--Carro id:1, Del usuario Juan Pérez
-(2, 2, 'En espera');--Carro id:2, Del usuario Ana Gómez
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `carrito_productos`
---
-
-CREATE TABLE `carrito_productos` (
-  `id_carrito_productos` int(11) NOT NULL,
+CREATE TABLE `carrito` (
   `id_carrito` int(11) NOT NULL,
-  `id_productos` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL
+  `fecha_creacion` date NOT NULL DEFAULT current_timestamp(),
+  `estado` varchar(45) NOT NULL DEFAULT 'Pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `carrito_productos`
+-- Volcado de datos para la tabla `carrito`
 --
 
-INSERT INTO `carrito_productos` (`id_carrito_productos`, `id_carrito`, `id_productos`, `cantidad`) VALUES
-(1, 1, 1, 2), --Juan Pérez tiene 2 Camisas Blancas en su carrito
-(2, 2, 2, 1); --Ana Gómez tiene 1 Pantalón Azul en su carrito
-
+INSERT INTO `carrito` (`id_carrito`, `fecha_creacion`, `estado`) VALUES
+(1, '2024-09-23', 'Pendiente'),
+(2, '2024-09-23', 'Pendiente');
 
 -- --------------------------------------------------------
 
@@ -72,119 +50,64 @@ INSERT INTO `carrito_productos` (`id_carrito_productos`, `id_carrito`, `id_produ
 CREATE TABLE `productos` (
   `id_producto` int(11) NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  `precio` decimal(10,0) NOT NULL,
-  `talle` varchar(10) NOT NULL,
   `color` varchar(45) NOT NULL,
+  `talle` varchar(10) NOT NULL,
   `categoria` varchar(45) NOT NULL,
-  `stock` int(11) NOT NULL,
-  `imagen_url` varchar(100) NOT NULL
+  `precio` decimal(10,0) NOT NULL,
+  `carrito_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id_producto`, `nombre`, `precio`, `talle`, `color`, `categoria`, `stock`, `imagen_url`) VALUES
-(1, 'Camisa Blanca', 25, 'L', 'Blanco', 'Camisas', 50, 'http://example.com/imagenes/camisa_blanca.jpg'),
-(2, 'Pantalón Azul', 46, 'M', 'Azul', 'Pantalones', 30, 'http://example.com/imagenes/pantalon_azul.jpg');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuarios`
---
-
-CREATE TABLE `usuarios` (
-  `id_usuario` int(11) NOT NULL,
-  `nombre` varchar(45) NOT NULL,
-  `email` varchar(45) NOT NULL,
-  `direccion` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id_usuario`, `nombre`, `email`, `direccion`) VALUES
-(1, 'Juan Pérez', 'juan.perez@example.com', 'Av. Siempre Viva 742'),
-(2, 'Ana Gómez', 'ana.gomez@example.com', 'Calle Falsa 123');
+INSERT INTO `productos` (`id_producto`, `nombre`, `color`, `talle`, `categoria`, `precio`, `carrito_id`) VALUES
+(1, 'Gorra', 'Blanco', 'Adulto', 'Accesorios', 25000, 1),
+(2, 'Remera', 'Roja', 'M', 'Casual', 22000, 1),
+(3, 'Short', 'Negro', 'XL', 'Deportiva', 18000, 2);
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `carritos`
+-- Indices de la tabla `carrito`
 --
-ALTER TABLE `carritos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `id_usuario` (`id_usuario`);
-
---
--- Indices de la tabla `carrito_productos`
---
-ALTER TABLE `carrito_productos`
-  ADD PRIMARY KEY (`id_carrito_productos`),
-  ADD KEY `id_productos` (`id_productos`),
-  ADD KEY `id_carrito` (`id_carrito`);
+ALTER TABLE `carrito`
+  ADD PRIMARY KEY (`id_carrito`);
 
 --
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`id_producto`);
-
---
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD PRIMARY KEY (`id_producto`),
+  ADD KEY `carrito_id` (`carrito_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `carritos`
+-- AUTO_INCREMENT de la tabla `carrito`
 --
-ALTER TABLE `carritos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `carrito_productos`
---
-ALTER TABLE `carrito_productos`
-  MODIFY `id_carrito_productos` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `carrito`
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
 --
 
 --
--- Filtros para la tabla `carritos`
+-- Filtros para la tabla `productos`
 --
-ALTER TABLE `carritos`
-  ADD CONSTRAINT `carritos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE NO ACTION ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `carrito_productos`
---
-ALTER TABLE `carrito_productos`
-  ADD CONSTRAINT `carrito_productos_ibfk_1` FOREIGN KEY (`id_productos`) REFERENCES `productos` (`id_producto`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `carrito_productos_ibfk_2` FOREIGN KEY (`id_carrito`) REFERENCES `carritos` (`id`) ON UPDATE CASCADE;
+ALTER TABLE `productos`
+  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id_carrito`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
