@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-09-2024 a las 00:26:14
+-- Tiempo de generación: 25-09-2024 a las 00:02:13
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -24,22 +24,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `carrito`
+-- Estructura de tabla para la tabla `categoria`
 --
 
-CREATE TABLE `carrito` (
-  `id_carrito` int(11) NOT NULL,
-  `fecha_creacion` date NOT NULL DEFAULT current_timestamp(),
-  `estado` varchar(45) NOT NULL DEFAULT 'Pendiente'
+CREATE TABLE `categoria` (
+  `id_categoria` int(11) NOT NULL,
+  `nombre` varchar(45) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `carrito`
+-- Volcado de datos para la tabla `categoria`
 --
 
-INSERT INTO `carrito` (`id_carrito`, `fecha_creacion`, `estado`) VALUES
-(1, '2024-09-23', 'Pendiente'),
-(2, '2024-09-23', 'Pendiente');
+INSERT INTO `categoria` (`id_categoria`, `nombre`) VALUES
+(1, 'Remeras'),
+(2, 'Camisas'),
+(3, 'Buzos y camperas'),
+(4, 'Pantalones'),
+(5, 'Accesorios');
 
 -- --------------------------------------------------------
 
@@ -52,52 +54,51 @@ CREATE TABLE `productos` (
   `nombre` varchar(45) NOT NULL,
   `color` varchar(45) NOT NULL,
   `talle` varchar(10) NOT NULL,
-  `categoria` varchar(45) NOT NULL,
   `precio` decimal(10,0) NOT NULL,
-  `carrito_id` int(11) NOT NULL
+  `url_imagen` varchar(255) NOT NULL DEFAULT '/img/remeras/default',
+  `categoria_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id_producto`, `nombre`, `color`, `talle`, `categoria`, `precio`, `carrito_id`) VALUES
-(1, 'Gorra', 'Blanco', 'Adulto', 'Accesorios', 25000, 1),
-(2, 'Remera', 'Roja', 'M', 'Casual', 22000, 1),
-(3, 'Short', 'Negro', 'XL', 'Deportiva', 18000, 2);
+INSERT INTO `productos` (`id_producto`, `nombre`, `color`, `talle`, `precio`, `url_imagen`, `categoria_id`) VALUES
+(8, 'Remera Y', 'Blanco', 'L', 23000, '/img/remeras/remeraY', 1),
+(9, 'Pantalón R', 'Azul', 'M', 30000, '/img/remeras/remeraY', 4);
 
 --
 -- Índices para tablas volcadas
 --
 
 --
--- Indices de la tabla `carrito`
+-- Indices de la tabla `categoria`
 --
-ALTER TABLE `carrito`
-  ADD PRIMARY KEY (`id_carrito`);
+ALTER TABLE `categoria`
+  ADD PRIMARY KEY (`id_categoria`);
 
 --
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
   ADD PRIMARY KEY (`id_producto`),
-  ADD KEY `carrito_id` (`carrito_id`);
+  ADD KEY `categoria_id` (`categoria_id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT de la tabla `carrito`
+-- AUTO_INCREMENT de la tabla `categoria`
 --
-ALTER TABLE `carrito`
-  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `categoria`
+  MODIFY `id_categoria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
@@ -107,7 +108,7 @@ ALTER TABLE `productos`
 -- Filtros para la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`carrito_id`) REFERENCES `carrito` (`id_carrito`) ON DELETE CASCADE ON UPDATE NO ACTION;
+  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`categoria_id`) REFERENCES `categoria` (`id_categoria`) ON DELETE NO ACTION ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
